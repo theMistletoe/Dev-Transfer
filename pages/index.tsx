@@ -1,11 +1,11 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import {addresses, contractFactory} from "@devprotocol/dev-kit"
 import Web3 from "web3";
 import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
+import getWeb3 from '../libs/getWeb3'
 
 const Home = () => {
 
@@ -13,6 +13,12 @@ const Home = () => {
 
   const [targetAddress, setTargetAddress] = useState<string>('');
   const [transferAmount, setTransferAmount] = useState<number>(0);
+
+  // useEffect(() => {
+  //   getWeb3();
+  //   console.log('X');
+    
+  // }, [])
 
   useEffect(() => {
     if (router.query.targetAddress) setTargetAddress(router.query.targetAddress as string);
@@ -22,7 +28,7 @@ const Home = () => {
   const handleTransferButton = async (_: React.MouseEvent<HTMLButtonElement>) => {
     if (!targetAddress || !transferAmount) return window.alert('input address and amount!');
 
-    const provider  = new Web3(window.ethereum)
+    const provider  = await getWeb3();
     const clientDev = contractFactory(provider.currentProvider)
     const registryContract = clientDev.registry(addresses.eth.ropsten.registry)
     const addressDEV = await registryContract.token()
