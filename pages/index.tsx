@@ -41,9 +41,9 @@ const Home = () => {
       </Head>
 
       <main className={styles.main}>
-        <input type="text" value={targetAddress} onChange={e => setTargetAddress(e.target.value)} placeholder='targetAddress'/>
-        <input type="number" value={transferAmount} onChange={e => setTransferAmount(Number(e.target.value))} placeholder='amount'/>
-        <button onClick={handleTransferButton}>transfer</button>
+        <input className='border rounded my-1' type="text" value={targetAddress} onChange={e => setTargetAddress(e.target.value)} placeholder='targetAddress'/>
+        <input className='border rounded my-1' type="number" value={transferAmount} onChange={e => setTransferAmount(Number(e.target.value))} placeholder='amount'/>
+        <button className='bg-blue-600 rounded text-white px-2 py-1 my-2' onClick={handleTransferButton}>transfer</button>
       </main>
 
       <footer className={styles.footer}>
