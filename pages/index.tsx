@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import {addresses, contractFactory} from "@devprotocol/dev-kit"
-import Web3 from "web3";
 import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
 import getWeb3 from '../libs/getWeb3'
@@ -14,12 +13,6 @@ const Home = () => {
   const [targetAddress, setTargetAddress] = useState<string>('');
   const [transferAmount, setTransferAmount] = useState<number>(0);
 
-  // useEffect(() => {
-  //   getWeb3();
-  //   console.log('X');
-    
-  // }, [])
-
   useEffect(() => {
     if (router.query.targetAddress) setTargetAddress(router.query.targetAddress as string);
     if (router.query.transferAmount) setTransferAmount(Number(router.query.transferAmount));
@@ -28,14 +21,19 @@ const Home = () => {
   const handleTransferButton = async (_: React.MouseEvent<HTMLButtonElement>) => {
     if (!targetAddress || !transferAmount) return window.alert('input address and amount!');
 
-    const provider  = await getWeb3();
-    const clientDev = contractFactory(provider.currentProvider)
-    const registryContract = clientDev.registry(addresses.eth.ropsten.registry)
-    const addressDEV = await registryContract.token()
-    const decimalNumber = Math.pow(10, 18).toString()
-    const transferDev   = BigNumber.from(transferAmount).mul(decimalNumber).toString()
-    const transfer      = await clientDev.dev(addressDEV).transfer(targetAddress, transferDev)
-    console.log(transfer);
+    try {
+      const provider  = await getWeb3();
+      const clientDev = contractFactory(provider.currentProvider)
+      const registryContract = clientDev.registry(addresses.eth.ropsten.registry)
+      const addressDEV = await registryContract.token()
+      const decimalNumber = Math.pow(10, 18).toString()
+      const transferDev   = BigNumber.from(transferAmount).mul(decimalNumber).toString()
+      const transfer      = await clientDev.dev(addressDEV).transfer(targetAddress, transferDev)
+      console.log(transfer);
+    } catch (error) {
+      console.error(error);
+      window.alert(error);
+    }
   }
 
   return (
